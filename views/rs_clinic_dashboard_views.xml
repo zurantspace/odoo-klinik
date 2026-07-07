@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ═══════════════════════════════════════════════════════════
+         Dashboard SIMRS Klinik — ir.actions.client
+         Tag "rs_clinic_dashboard" diregistrasi di JS via OWL component
+    ════════════════════════════════════════════════════════════ -->
+
+    <!-- Client Action — memanggil OWL RsClinicDashboard component -->
+    <record id="action_rs_clinic_dashboard" model="ir.actions.client">
+        <field name="name">Dashboard Klinik</field>
+        <field name="tag">rs_clinic_dashboard</field>
+    </record>
+
+</odoo>

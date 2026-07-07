@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ════════════════════════════════════════════════════
+         Security Groups & Privileges (Odoo 19 Style)
+    ═══════════════════════════════════════════════════════ -->
+    <record id="module_rs_clinic" model="ir.module.category">
+        <field name="name">SIMRS - Klinik</field>
+        <field name="description">Modul manajemen pasien dan klinik rumah sakit</field>
+        <field name="sequence">100</field>
+    </record>
+
+    <!-- Privilege for Klinik -->
+    <record model="res.groups.privilege" id="privilege_rs_clinic">
+        <field name="name">Klinik</field>
+        <field name="category_id" ref="module_rs_clinic"/>
+    </record>
+
+    <!-- Group: Resepsionis (Read + Create kunjungan, tidak bisa diagnosa) -->
+    <record id="group_rs_clinic_receptionist" model="res.groups">
+        <field name="name">Resepsionis / Front Desk</field>
+        <field name="privilege_id" ref="privilege_rs_clinic"/>
+        <field name="comment">Dapat mendaftarkan pasien dan mengelola antrian</field>
+    </record>
+
+    <!-- Group: Perawat (Read kunjungan + update notes) -->
+    <record id="group_rs_clinic_nurse" model="res.groups">
+        <field name="name">Perawat</field>
+        <field name="privilege_id" ref="privilege_rs_clinic"/>
+        <field name="implied_ids" eval="[(4, ref('group_rs_clinic_receptionist'))]"/>
+        <field name="comment">Dapat mengupdate status antrian dan catatan perawatan</field>
+    </record>
+
+    <!-- Group: Dokter (Bisa input diagnosa dan resep) -->
+    <record id="group_rs_clinic_doctor" model="res.groups">
+        <field name="name">Dokter</field>
+        <field name="privilege_id" ref="privilege_rs_clinic"/>
+        <field name="implied_ids" eval="[(4, ref('group_rs_clinic_nurse'))]"/>
+        <field name="comment">Dapat menginput diagnosa, resep, dan menyelesaikan kunjungan</field>
+    </record>
+
+    <!-- Group: Manager Klinik (Full access) -->
+    <record id="group_rs_clinic_manager" model="res.groups">
+        <field name="name">Manager Klinik</field>
+        <field name="privilege_id" ref="privilege_rs_clinic"/>
+        <field name="implied_ids" eval="[(4, ref('group_rs_clinic_doctor'))]"/>
+        <field name="user_ids" eval="[(4, ref('base.user_admin'))]"/>
+        <field name="comment">Akses penuh termasuk konfigurasi dan laporan</field>
+    </record>
+</odoo>

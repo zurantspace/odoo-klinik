@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ═══════════════════════════════════════════════════════════
+         rs.clinic.queue — Antrian Views
+    ════════════════════════════════════════════════════════════ -->
+
+    <record id="view_rs_clinic_queue_list" model="ir.ui.view">
+        <field name="name">rs.clinic.queue.list</field>
+        <field name="model">rs.clinic.queue</field>
+        <field name="arch" type="xml">
+            <list string="Sesi Antrian Harian">
+                <field name="date"/>
+                <field name="polyclinic_id"/>
+                <field name="doctor_id"/>
+                <field name="current_number" string="Dipanggil"/>
+                <field name="total_queue" string="Total"/>
+                <field name="waiting_count" string="Menunggu"/>
+                <field name="done_count" string="Selesai"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rs_clinic_queue_form" model="ir.ui.view">
+        <field name="name">rs.clinic.queue.form</field>
+        <field name="model">rs.clinic.queue</field>
+        <field name="arch" type="xml">
+            <form string="Sesi Antrian">
+                <header>
+                    <button name="action_call_next"
+                        string="Panggil Berikutnya →"
+                        type="object"
+                        class="btn-primary"
+                        icon="fa-bell"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="polyclinic_id"/>
+                            <field name="doctor_id"/>
+                        </group>
+                        <group>
+                            <field name="current_number" readonly="1" string="No. Antrian Aktif"/>
+                            <field name="total_queue" readonly="1"/>
+                            <field name="waiting_count" readonly="1"/>
+                            <field name="done_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <!-- Daftar antrian embedded -->
+                    <separator string="Daftar Antrian"/>
+                    <field name="visit_ids" readonly="1">
+                        <list decoration-warning="state == 'in_progress'"
+                            decoration-success="state == 'done'"
+                            decoration-muted="state == 'cancelled'">
+                            <field name="queue_number" string="No."/>
+                            <field name="patient_id"/>
+                            <field name="visit_type" widget="badge"/>
+                            <field name="insurance_type" optional="show"/>
+                            <field name="state" widget="badge"
+                                decoration-success="state == 'done'"
+                                decoration-warning="state == 'in_progress'"
+                                decoration-info="state == 'queued'"
+                                decoration-danger="state == 'cancelled'"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rs_clinic_queue" model="ir.actions.act_window">
+        <field name="name">Antrian Harian</field>
+        <field name="res_model">rs.clinic.queue</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('date', '=', context_today())]</field>
+    </record>
+</odoo>

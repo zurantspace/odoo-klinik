@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ═══════════════════════════════════════════════════════════
+         rs.clinic.visit — Kunjungan Views
+    ════════════════════════════════════════════════════════════ -->
+
+    <!-- LIST VIEW -->
+    <record id="view_rs_clinic_visit_list" model="ir.ui.view">
+        <field name="name">rs.clinic.visit.list</field>
+        <field name="model">rs.clinic.visit</field>
+        <field name="arch" type="xml">
+            <list string="Kunjungan Pasien"
+                decoration-success="state == 'done'"
+                decoration-warning="state == 'in_progress'"
+                decoration-info="state == 'queued'"
+                decoration-muted="state == 'cancelled'">
+                <field name="reference"/>
+                <field name="visit_date"/>
+                <field name="patient_id"/>
+                <field name="patient_no" optional="show"/>
+                <field name="queue_number" string="No. Antrian"/>
+                <field name="polyclinic_id"/>
+                <field name="doctor_id"/>
+                <field name="visit_type" widget="badge"/>
+                <field name="insurance_type" optional="show" widget="badge"
+                    decoration-success="insurance_type == 'bpjs'"
+                    decoration-info="insurance_type == 'private'"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'done'"
+                    decoration-warning="state == 'in_progress'"
+                    decoration-info="state == 'queued'"
+                    decoration-danger="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- KANBAN VIEW — Antrian Real-Time -->
+    <record id="view_rs_clinic_visit_kanban" model="ir.ui.view">
+        <field name="name">rs.clinic.visit.kanban</field>
+        <field name="model">rs.clinic.visit</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_small_column"
+                group_create="false">
+                <field name="state"/>
+                <field name="patient_id"/>
+                <field name="queue_number"/>
+                <field name="polyclinic_id"/>
+                <field name="doctor_id"/>
+                <field name="visit_type"/>
+                <field name="insurance_type"/>
+                <field name="patient_allergy"/>
+                <templates>
+                    <t t-name="card">
+                        <main>
+                            <strong class="fs-6">
+                                No. <field name="queue_number"/> — <field name="patient_id"/>
+                            </strong>
+                            <div class="text-muted">
+                                <field name="polyclinic_id"/>
+                            </div>
+                            <div class="mt-1">
+                                <span t-if="record.insurance_type.raw_value == 'bpjs'"
+                                    class="badge bg-success">BPJS</span>
+                                <span t-if="record.insurance_type.raw_value == 'private'"
+                                    class="badge bg-info">Asuransi</span>
+                                <span t-if="record.insurance_type.raw_value == 'general'"
+                                    class="badge bg-secondary">Umum</span>
+                            </div>
+                            <div class="mt-1">
+                                <span>Dokter: <field name="doctor_id"/></span>
+                            </div>
+                            <t t-if="record.patient_allergy.value">
+                                <div class="text-danger mt-1">
+                                    <i class="fa fa-exclamation-triangle"/> Alergi: <field name="patient_allergy"/>
+                                </div>
+                            </t>
+                        </main>
+                        <footer class="pt-1">
+                            <field name="visit_type" widget="badge"/>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- FORM VIEW -->
+    <record id="view_rs_clinic_visit_form" model="ir.ui.view">
+        <field name="name">rs.clinic.visit.form</field>
+        <field name="model">rs.clinic.visit</field>
+        <field name="arch" type="xml">
+            <form string="Kunjungan Pasien">
+                <header>
+                    <!-- State Buttons -->
+                    <button name="action_confirm_queue"
+                        string="Konfirmasi Antrian"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'registered'"/>
+                    <button name="action_start_treatment"
+                        string="Mulai Pemeriksaan"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state != 'queued'"/>
+                    <button name="action_done"
+                        string="Selesai"
+                        type="object"
+                        class="btn-success"
+                        invisible="state != 'in_progress'"/>
+                    <button name="action_cancel"
+                        string="Batalkan"
+                        type="object"
+                        class="btn-danger"
+                        invisible="state in ('done', 'cancelled')"/>
+                    <button name="action_reset_to_registered"
+                        string="Reset"
+                        type="object"
+                        invisible="state != 'cancelled'"/>
+                    <!-- Invoice Button -->
+                    <button name="action_view_invoice"
+                        string="Lihat Invoice"
+                        type="object"
+                        class="btn-info"
+                        invisible="not invoice_id"/>
+                    <!-- Status Bar -->
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="registered,queued,in_progress,done"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <label for="reference" string="No. Kunjungan"/>
+                        <h1><field name="reference" readonly="1"/></h1>
+                    </div>
+
+                    <!-- Alert Alergi -->
+                    <div class="alert alert-danger"
+                        invisible="not patient_allergy"
+                        role="alert">
+                        <strong><i class="fa fa-exclamation-triangle"/> PERINGATAN ALERGI:</strong>
+                        <field name="patient_allergy" readonly="1"/>
+                    </div>
+
+                    <group string="Informasi Pendaftaran">
+                        <group string="Data Pasien">
+                            <field name="patient_id" options="{'no_create': True}"/>
+                            <field name="patient_no" readonly="1"/>
+                            <field name="patient_age" readonly="1"/>
+                        </group>
+                        <group string="Data Kunjungan">
+                            <field name="visit_date"/>
+                            <field name="visit_type"/>
+                            <field name="polyclinic_id"/>
+                            <field name="doctor_id"/>
+                            <field name="queue_number" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group string="Pembayaran">
+                        <group>
+                            <field name="insurance_type"
+                                readonly="state == 'done'"/>
+                            <field name="bpjs_no"
+                                invisible="insurance_type != 'bpjs'"
+                                readonly="state == 'done'"
+                                placeholder="13 digit nomor BPJS..."/>
+                        </group>
+                        <group>
+                            <field name="consultation_fee"
+                                invisible="insurance_type == 'bpjs'"
+                                readonly="state == 'done'"/>
+                            <field name="invoice_id" readonly="1"
+                                invisible="not invoice_id"/>
+                            <field name="invoice_state" readonly="1"
+                                invisible="not invoice_id"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Keluhan &amp; Diagnosa" name="medical">
+                            <group>
+                                <field name="complaint"
+                                    placeholder="Keluhan yang disampaikan pasien..."
+                                    readonly="state == 'done'"/>
+                                <field name="diagnosis"
+                                    placeholder="Diagnosa dokter..."
+                                    groups="rs_clinic.group_rs_clinic_doctor"/>
+                                <field name="icd10_code"
+                                    placeholder="Contoh: J00 - Nasopharyngitis akut"
+                                    groups="rs_clinic.group_rs_clinic_doctor"/>
+                                <field name="prescription_notes"
+                                    placeholder="Resep / tindakan medis..."
+                                    groups="rs_clinic.group_rs_clinic_doctor"/>
+                            </group>
+                        </page>
+                        <page string="Catatan &amp; Tindak Lanjut" name="followup">
+                            <group>
+                                <field name="follow_up_date"/>
+                                <field name="notes" placeholder="Catatan tambahan..."/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW -->
+    <record id="view_rs_clinic_visit_search" model="ir.ui.view">
+        <field name="name">rs.clinic.visit.search</field>
+        <field name="model">rs.clinic.visit</field>
+        <field name="arch" type="xml">
+            <search string="Cari Kunjungan">
+                <field name="reference"/>
+                <field name="patient_id"/>
+                <field name="polyclinic_id"/>
+                <field name="doctor_id"/>
+                <separator/>
+                <filter string="Hari Ini" name="filter_today"
+                    domain="[('visit_date', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Minggu Ini" name="filter_week"
+                    domain="[('visit_date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Menunggu Antrian" name="filter_queued"
+                    domain="[('state', '=', 'queued')]"/>
+                <filter string="Sedang Ditangani" name="filter_in_progress"
+                    domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Selesai" name="filter_done"
+                    domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="BPJS" name="filter_bpjs"
+                    domain="[('insurance_type', '=', 'bpjs')]"/>
+                <group>
+                    <filter name="group_poli" string="Poliklinik"
+                        context="{'group_by': 'polyclinic_id'}"/>
+                    <filter name="group_doctor" string="Dokter"
+                        context="{'group_by': 'doctor_id'}"/>
+                    <filter name="group_date" string="Tanggal"
+                        context="{'group_by': 'visit_date:day'}"/>
+                    <filter name="group_state" string="Status"
+                        context="{'group_by': 'state'}"/>
+                    <filter name="group_insurance" string="Jenis Pembayaran"
+                        context="{'group_by': 'insurance_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION: Semua Kunjungan -->
+    <record id="action_rs_clinic_visit" model="ir.actions.act_window">
+        <field name="name">Semua Kunjungan</field>
+        <field name="res_model">rs.clinic.visit</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_rs_clinic_visit_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Belum ada data kunjungan.
+            </p>
+            <p>Klik <b>Baru</b> untuk mendaftarkan kunjungan pasien.</p>
+        </field>
+    </record>
+
+    <!-- ACTION: Kunjungan Hari Ini (shortcut dashboard) -->
+    <record id="action_rs_clinic_visit_today" model="ir.actions.act_window">
+        <field name="name">Antrian Hari Ini</field>
+        <field name="res_model">rs.clinic.visit</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_rs_clinic_visit_search"/>
+        <field name="domain">[('visit_date', '=', context_today())]</field>
+        <field name="context">{'search_default_filter_today': 1}</field>
+    </record>
+</odoo>

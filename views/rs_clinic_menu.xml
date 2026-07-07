@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ═══════════════════════════════════════════════════════════
+         Menu Structure — SIMRS Klinik
+    ════════════════════════════════════════════════════════════ -->
+
+    <!-- Root Menu -->
+    <menuitem id="menu_rs_clinic_root"
+        name="Klinik"
+        sequence="10"
+        groups="rs_clinic.group_rs_clinic_receptionist"
+        action="action_rs_clinic_dashboard"
+        web_icon="rs_clinic,static/description/icon.png"/>
+
+    <!-- Dashboard -->
+    <menuitem id="menu_rs_clinic_dashboard"
+        name="Dashboard"
+        parent="menu_rs_clinic_root"
+        action="action_rs_clinic_dashboard"
+        sequence="1"
+        groups="rs_clinic.group_rs_clinic_receptionist"/>
+
+    <!-- Antrian Hari Ini -->
+    <menuitem id="menu_rs_clinic_antrian"
+        name="Antrian Hari Ini"
+        parent="menu_rs_clinic_root"
+        action="action_rs_clinic_visit_today"
+        sequence="2"
+        groups="rs_clinic.group_rs_clinic_receptionist"/>
+
+    <!-- Pasien -->
+    <menuitem id="menu_rs_clinic_patients"
+        name="Pasien"
+        parent="menu_rs_clinic_root"
+        action="action_rs_patient"
+        sequence="5"
+        groups="rs_clinic.group_rs_clinic_receptionist"/>
+
+    <!-- Kunjungan — semua tanpa filter hari ini -->
+    <menuitem id="menu_rs_clinic_visits"
+        name="Semua Kunjungan"
+        parent="menu_rs_clinic_root"
+        action="action_rs_clinic_visit"
+        sequence="10"
+        groups="rs_clinic.group_rs_clinic_receptionist"/>
+
+    <!-- Sesi Antrian -->
+    <menuitem id="menu_rs_clinic_queue_list"
+        name="Sesi Antrian"
+        parent="menu_rs_clinic_root"
+        action="action_rs_clinic_queue"
+        sequence="15"
+        groups="rs_clinic.group_rs_clinic_receptionist"/>
+
+    <!-- Poliklinik — langsung di menu utama, manager only -->
+    <menuitem id="menu_rs_clinic_polyclinic"
+        name="Poliklinik"
+        parent="menu_rs_clinic_root"
+        action="action_rs_polyclinic"
+        sequence="20"
+        groups="rs_clinic.group_rs_clinic_manager"/>
+
+</odoo>

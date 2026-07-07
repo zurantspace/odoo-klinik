@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rs_patient_receptionist,rs.patient.receptionist,model_rs_patient,rs_clinic.group_rs_clinic_receptionist,1,1,1,0
+access_rs_patient_manager,rs.patient.manager,model_rs_patient,rs_clinic.group_rs_clinic_manager,1,1,1,1
+access_rs_polyclinic_receptionist,rs.polyclinic.receptionist,model_rs_polyclinic,rs_clinic.group_rs_clinic_receptionist,1,0,0,0
+access_rs_polyclinic_manager,rs.polyclinic.manager,model_rs_polyclinic,rs_clinic.group_rs_clinic_manager,1,1,1,1
+access_rs_clinic_visit_receptionist,rs.clinic.visit.receptionist,model_rs_clinic_visit,rs_clinic.group_rs_clinic_receptionist,1,1,1,0
+access_rs_clinic_visit_doctor,rs.clinic.visit.doctor,model_rs_clinic_visit,rs_clinic.group_rs_clinic_doctor,1,1,0,0
+access_rs_clinic_visit_manager,rs.clinic.visit.manager,model_rs_clinic_visit,rs_clinic.group_rs_clinic_manager,1,1,1,1
+access_rs_clinic_queue_receptionist,rs.clinic.queue.receptionist,model_rs_clinic_queue,rs_clinic.group_rs_clinic_receptionist,1,1,1,0
+access_rs_clinic_queue_manager,rs.clinic.queue.manager,model_rs_clinic_queue,rs_clinic.group_rs_clinic_manager,1,1,1,1

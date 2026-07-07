@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Report Action -->
+    <record id="action_report_rs_clinic_visit" model="ir.actions.report">
+        <field name="name">Slip Kunjungan Pasien</field>
+        <field name="model">rs.clinic.visit</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">rs_clinic.report_rs_clinic_visit_template</field>
+        <field name="report_file">rs_clinic.report_rs_clinic_visit_template</field>
+        <field name="binding_model_id" ref="model_rs_clinic_visit"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <!-- QWeb Template -->
+    <template id="report_rs_clinic_visit_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2 class="text-center">SLIP KUNJUNGAN PASIEN</h2>
+                        <hr/>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <table class="table table-sm table-borderless">
+                                    <tr>
+                                        <td><strong>No. Kunjungan</strong></td>
+                                        <td>: <span t-field="o.reference"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Tanggal</strong></td>
+                                        <td>: <span t-field="o.visit_date"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>No. Antrian</strong></td>
+                                        <td>: <span t-field="o.queue_number"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <table class="table table-sm table-borderless">
+                                    <tr>
+                                        <td><strong>Poliklinik</strong></td>
+                                        <td>: <span t-field="o.polyclinic_id.name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Dokter</strong></td>
+                                        <td>: <span t-esc="o.doctor_id.name or '-'"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Jenis</strong></td>
+                                        <td>: <span t-field="o.visit_type"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <hr/>
+                        <h4>Data Pasien</h4>
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <td width="200"><strong>Nama</strong></td>
+                                <td>: <span t-field="o.patient_id.name"/></td>
+                                <td width="200"><strong>No. Rekam Medis</strong></td>
+                                <td>: <span t-field="o.patient_no"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Umur / Kelamin</strong></td>
+                                <td>: <span t-esc="o.patient_id.age"/> thn /
+                                    <span t-field="o.patient_id.gender"/>
+                                </td>
+                                <td><strong>Pembayaran</strong></td>
+                                <td>: <span t-field="o.insurance_type"/>
+                                    <t t-if="o.bpjs_no">
+                                        (<span t-field="o.bpjs_no"/>)
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr t-if="o.patient_id.allergy_notes">
+                                <td><strong>Alergi</strong></td>
+                                <td colspan="3" class="text-danger">
+                                    : <span t-field="o.patient_id.allergy_notes"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <hr/>
+                        <h4>Keluhan &amp; Diagnosa</h4>
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <td width="200"><strong>Keluhan</strong></td>
+                                <td>: <span t-esc="o.complaint or '-'"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Diagnosa</strong></td>
+                                <td>: <span t-esc="o.diagnosis or '-'"/>
+                                    <t t-if="o.icd10_code">
+                                        (ICD-10: <span t-esc="o.icd10_code"/>)
+                                    </t>
+                                </td>
+                            </tr>
+                            <tr t-if="o.follow_up_date">
+                                <td><strong>Kontrol Berikutnya</strong></td>
+                                <td>: <span t-field="o.follow_up_date"/></td>
+                            </tr>
+                        </table>
+
+                        <!-- Tanda Tangan -->
+                        <div class="row mt-5">
+                            <div class="col-6 text-center">
+                                <p>Pasien / Wali</p>
+                                <br/><br/><br/>
+                                <p>(_______________________)</p>
+                            </div>
+                            <div class="col-6 text-center">
+                                <p>Dokter Pemeriksa</p>
+                                <br/><br/><br/>
+                                <p>(<span t-esc="o.doctor_id.name or '_______________________'"/>)</p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

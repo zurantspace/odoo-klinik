@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rs_clinic_assets_backend" model="ir.asset">
+        <field name="name">rs_clinic Dashboard JS</field>
+        <field name="bundle">web.assets_backend</field>
+        <field name="path">rs_clinic/static/src/js/rs_clinic_dashboard.js</field>
+    </record>
+
+    <record id="rs_clinic_assets_backend_xml" model="ir.asset">
+        <field name="name">rs_clinic Dashboard XML</field>
+        <field name="bundle">web.assets_backend</field>
+        <field name="path">rs_clinic/static/src/xml/rs_clinic_dashboard.xml</field>
+    </record>
+
+    <record id="rs_clinic_assets_backend_css" model="ir.asset">
+        <field name="name">rs_clinic Dashboard CSS</field>
+        <field name="bundle">web.assets_backend</field>
+        <field name="path">rs_clinic/static/src/css/rs_clinic_dashboard.css</field>
+    </record>
+</odoo>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ═══════════════════════════════════════════════════════════
+         rs.polyclinic — Poliklinik Views
+    ════════════════════════════════════════════════════════════ -->
+
+    <record id="view_rs_polyclinic_list" model="ir.ui.view">
+        <field name="name">rs.polyclinic.list</field>
+        <field name="model">rs.polyclinic</field>
+        <field name="arch" type="xml">
+            <list string="Daftar Poliklinik">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="location"/>
+                <field name="doctor_ids" widget="many2many_tags"/>
+                <field name="visit_today_count" string="Kunjungan Hari Ini"/>
+                <field name="queue_today_count" string="Antrian Aktif"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_rs_polyclinic_form" model="ir.ui.view">
+        <field name="name">rs.polyclinic.form</field>
+        <field name="model">rs.polyclinic</field>
+        <field name="arch" type="xml">
+            <form string="Poliklinik">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                            name="action_view_today_visits" icon="fa-users">
+                            <field name="visit_today_count" widget="statinfo"
+                                string="Kunjungan Hari Ini"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Nama Poliklinik..."/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="location"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>
+                    <group string="Dokter Bertugas">
+                        <field name="doctor_ids" nolabel="1"
+                            widget="many2many_tags"
+                            placeholder="Tambah dokter..."/>
+                    </group>
+                    <group string="Deskripsi">
+                        <field name="description" nolabel="1"
+                            placeholder="Keterangan poliklinik..."/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_rs_polyclinic" model="ir.actions.act_window">
+        <field name="name">Poliklinik</field>
+        <field name="res_model">rs.polyclinic</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Demo Data: Poliklinik -->
+    <record id="demo_poli_penyakit_dalam" model="rs.polyclinic">
+        <field name="name">Penyakit Dalam</field>
+        <field name="code">DALAM</field>
+        <field name="location">Lantai 1 - Gedung A</field>
+    </record>
+
+    <record id="demo_poli_bedah" model="rs.polyclinic">
+        <field name="name">Bedah Umum</field>
+        <field name="code">BEDAH</field>
+        <field name="location">Lantai 2 - Gedung A</field>
+    </record>
+
+    <record id="demo_poli_anak" model="rs.polyclinic">
+        <field name="name">Kesehatan Anak</field>
+        <field name="code">ANAK</field>
+        <field name="location">Lantai 1 - Gedung B</field>
+    </record>
+
+    <record id="demo_poli_kandungan" model="rs.polyclinic">
+        <field name="name">Kebidanan &amp; Kandungan</field>
+        <field name="code">OBGYN</field>
+        <field name="location">Lantai 2 - Gedung B</field>
+    </record>
+
+    <record id="demo_poli_ugd" model="rs.polyclinic">
+        <field name="name">UGD / Gawat Darurat</field>
+        <field name="code">UGD</field>
+        <field name="location">Lantai 1 - Gedung Utama</field>
+    </record>
+
+    <!-- Demo Data: Pasien -->
+    <record id="demo_patient_budi" model="rs.patient">
+        <field name="name">Budi Santoso</field>
+        <field name="nik">3201234567890001</field>
+        <field name="birth_date">1985-03-15</field>
+        <field name="gender">male</field>
+        <field name="blood_type">O</field>
+        <field name="phone">081234567890</field>
+        <field name="address">Jl. Merdeka No. 10, Jakarta Selatan</field>
+        <field name="insurance_type">bpjs</field>
+        <field name="bpjs_no">0001234567890</field>
+        <field name="bpjs_class">2</field>
+    </record>
+
+    <record id="demo_patient_sari" model="rs.patient">
+        <field name="name">Sari Dewi</field>
+        <field name="nik">3201234567890002</field>
+        <field name="birth_date">1992-07-22</field>
+        <field name="gender">female</field>
+        <field name="blood_type">A</field>
+        <field name="phone">089876543210</field>
+        <field name="address">Jl. Sudirman No. 25, Jakarta Pusat</field>
+        <field name="insurance_type">general</field>
+        <field name="allergy_notes">Alergi Penisilin</field>
+    </record>
+
+    <record id="demo_patient_anak" model="rs.patient">
+        <field name="name">Rizky Pratama</field>
+        <field name="nik">3201234567890003</field>
+        <field name="birth_date">2018-11-05</field>
+        <field name="gender">male</field>
+        <field name="phone">087654321098</field>
+        <field name="address">Jl. Gatot Subroto No. 5, Jakarta</field>
+        <field name="insurance_type">bpjs</field>
+        <field name="bpjs_no">0009876543210</field>
+        <field name="bpjs_class">3</field>
+        <field name="guardian_name">Ahmad Pratama</field>
+        <field name="guardian_relation">Ayah</field>
+    </record>
+</odoo>

@@ -1,0 +1,28 @@
+/* ============================================================
+   SIMRS Dashboard — CSS Scroll Fix & Adjustments
+   ============================================================ */
+
+/* Force scroll on client action container */
+.o_rs_clinic_dashboard {
+    overflow-y: auto !important;
+    height: 100% !important;
+    box-sizing: border-box;
+    background-color: var(--bg-light, #f8f9fa);
+}
+
+/* Subtle table alignments and hover states */
+.o_rs_clinic_dashboard .table > :not(caption) > * > * {
+    padding: 10px 16px;
+}
+.o_rs_clinic_dashboard .table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+}
+.o_rs_clinic_dashboard .list-group-item-action {
+    transition: background-color 0.15s ease;
+}
+.o_rs_clinic_dashboard .card {
+    border-radius: 6px !important;
+}
